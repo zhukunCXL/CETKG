@@ -1,0 +1,110 @@
+1.match (e:Event)
+with e.`1Actor1` AS name
+merge(A:Actor{ActorName:name})
+
+2.match (e:Event)
+with e.`1Actor2` AS name
+merge(A:Actor{ActorName:name})
+
+3.match(c:`Case`)-[:`hasEvent`]->(e:Event)
+match(a:Actor) where e.`1Actor1`=a.`ActorName`
+create (a)-[:carryOut{CaseName:c.`CaseName`}]->(e)
+
+4.match(c:`Case`)-[:`hasEvent`]->(e:Event)
+match(a:Actor) where e.`1Actor1`=a.`ActorName`
+create (a)-[:carryOut{CaseName:c.`CaseName`}]->(e)
+
+5.MATCH(c:Case)-[:hasEvent]->(e:Event)
+MATCH(a:Actor) WHERE e.`1Actor1`=a.ActorName or e.`1Actor2`=a.ActorName 
+MERGE (c)-[:hasActor{CaseName:c.`CaseName`}]->(a)
+
+6.MATCH p=(c:Case)-[r:hasActor]->(a:Actor) 
+merge (a)-[:participateIn]->(c)
+
+7.match (c:Case)-[:hasActor]->(a:Actor) 
+match (a:Actor)-[:carryOut{CaseName:c.`CaseName` }]->(ev:`EconomicEvent`)
+with c, a, ev as events order by ev.`1Date`,ev.EventId
+with c,a, collect(events) as eventlist
+unwind range(0,size(eventlist)-2) as i
+with c, a, eventlist[i] as e1,eventlist[i+1] as e2
+merge (e1)-[:ecoDf{DfType:'ecoDf',Actor1Name:a.`ActorName`,CaseName:c.`CaseName`}]->(e2)
+
+8.match (c:Case)-[:hasActor]->(a:Actor) 
+match (a:Actor)-[:carryOut{CaseName:c.`CaseName` }]->(ev:`MilitaryEvent`)
+with c, a, ev as events order by ev.`1Date`,ev.EventId
+with c,a, collect(events) as eventlist
+unwind range(0,size(eventlist)-2) as i
+with c, a, eventlist[i] as e1,eventlist[i+1] as e2
+merge (e1)-[:milDf{DfType:'milDf',Actor1Name:a.`ActorName`,CaseName:c.`CaseName`}]->(e2)
+
+9.match (c:Case)-[:hasActor]->(a:Actor) 
+match (a:Actor)-[:carryOut{CaseName:c.`CaseName` }]->(ev:`DiplomaticEvent`)
+with c, a, ev as events order by ev.`1Date`,ev.EventId
+with c,a, collect(events) as eventlist
+unwind range(0,size(eventlist)-2) as i
+with c, a, eventlist[i] as e1,eventlist[i+1] as e2
+merge (e1)-[:dipDf{DfType:'dipDf',Actor1Name:a.`ActorName`,CaseName:c.`CaseName`}]->(e2)
+
+10.match (c:Case)-[:hasActor]->(a:Actor) 
+match (a:Actor)-[:carryOut{CaseName:c.`CaseName` }]->(ev:`UnofficialEvent`)
+with c, a, ev as events order by ev.`1Date`,ev.EventId
+with c,a, collect(events) as eventlist
+unwind range(0,size(eventlist)-2) as i
+with c, a, eventlist[i] as e1,eventlist[i+1] as e2
+merge (e1)-[:unoDf{DfType:'unoDf',Actor1Name:a.`ActorName`,CaseName:c.`CaseName`}]->(e2)
+
+11.match (c:Case)-[:hasActor]->(a:Actor) 
+match (a:Actor)-[:carryOut{CaseName:c.`CaseName` }]->(ev:`IntentionEvent`)
+with c, a, ev as events order by ev.`1Date`,ev.EventId
+with c,a, collect(events) as eventlist
+unwind range(0,size(eventlist)-2) as i
+with c, a, eventlist[i] as e1,eventlist[i+1] as e2
+merge (e1)-[:intDf{DfType:'intDf',Actor1Name:a.`ActorName`,CaseName:c.`CaseName`}]->(e2)
+
+12.match (c:Case)-[:hasActor]->(a:Actor) 
+match (a:Actor)-[:carryOut{CaseName:c.`CaseName` }]->(ev:`RequestEvent`)
+with c, a, ev as events order by ev.`1Date`,ev.EventId
+with c,a, collect(events) as eventlist
+unwind range(0,size(eventlist)-2) as i
+with c, a, eventlist[i] as e1,eventlist[i+1] as e2
+merge (e1)-[:reqDf{DfType:'reqDf',Actor1Name:a.`ActorName`,CaseName:c.`CaseName`}]->(e2)
+
+13.match (c:Case)-[:hasActor]->(a:Actor) 
+match (a:Actor)-[:carryOut{CaseName:c.`CaseName` }]->(ev:`CommentEvent`)
+with c, a, ev as events order by ev.`1Date`,ev.EventId
+with c,a, collect(events) as eventlist
+unwind range(0,size(eventlist)-2) as i
+with c, a, eventlist[i] as e1,eventlist[i+1] as e2
+merge (e1)-[:comDf{DfType:'comDf',Actor1Name:a.`ActorName`,CaseName:c.`CaseName`}]->(e2)
+
+14.match (c:Case)-[:hasActor]->(a:Actor) 
+match (a:Actor)-[:carryOut{CaseName:c.`CaseName` }]->(ev:`PhysicalEvent`)
+with c, a, ev as events order by ev.`1Date`,ev.EventId
+with c,a, collect(events) as eventlist
+unwind range(0,size(eventlist)-2) as i
+with c, a, eventlist[i] as e1,eventlist[i+1] as e2
+merge (e1)-[:phyDf{DfType:'phyDf',Actor1Name:a.`ActorName`,CaseName:c.`CaseName`}]->(e2)
+
+15.match (c:Case)-[:hasActor]->(a:Actor) 
+match (a:Actor)-[:carryOut{CaseName:c.`CaseName` }]->(ev:`VerbalEvent`)
+with c, a, ev as events order by ev.`1Date`,ev.EventId
+with c,a, collect(events) as eventlist
+unwind range(0,size(eventlist)-2) as i
+with c, a, eventlist[i] as e1,eventlist[i+1] as e2
+merge (e1)-[:verDf{DfType:'verDf',Actor1Name:a.`ActorName`,CaseName:c.`CaseName`}]->(e2)
+
+16.match (c:Case)-[:hasActor]->(a:Actor) 
+match (a:Actor)-[:carryOut{CaseName:c.`CaseName` }]->(ev)
+with c, a, ev as events order by ev.`1Date`,ev.EventId
+with c,a, collect(events) as eventlist
+unwind range(0,size(eventlist)-2) as i
+with c, a, eventlist[i] as e1,eventlist[i+1] as e2
+merge (e1)-[:df{DfType:'df',Actor1Name:a.`ActorName`,CaseName:c.`CaseName`}]->(e2)
+
+17.match (c:Case)-[:hasEvent]->(n1:Event)-[:`aimAt`]->(a:Actor)
+match(a)-[:carryOut{CaseName:c.`CaseName`}]->(ev)
+where  (n1.`1Date`<ev.`1Date`) or (n1.`1Date`=ev.`1Date` and n1.EventId<ev.EventId)
+with c,a,n1,ev order by ev.`1Date`,ev.EventId
+with c,a,n1,collect(ev) as eventlist
+with c,a,n1,eventlist[0] as e2
+merge (n1)-[:aimDf{DfType:'aimDf',Actor2Name:a.`ActorName`,CaseName:c.`CaseName`}]->(e2)
